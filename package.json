@@ -1,0 +1,34 @@
+{
+  "name": "telegram_bot",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
+    "currency-codes": "^2.1.0",
+    "expess": "^0.0.1-security",
+    "express": "^4.18.1",
+    "node-cache": "^5.1.2",
+    "node-telegram-bot-api": "^0.59.0",
+    "nodemon": "^2.0.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denisr2211/converter_task.git"
+  },
+  "bugs": {
+    "url": "https://github.com/denisr2211/converter_task/issues"
+  },
+  "homepage": "https://github.com/denisr2211/converter_task#readme",
+  "devDependencies": {
+    "cc": "^3.0.1"
+  },
+  "keywords": [],
+  "description": ""
+}
