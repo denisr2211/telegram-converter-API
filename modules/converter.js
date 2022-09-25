@@ -1,55 +1,53 @@
 const Currency = require('./models/Classes/Currency');
-const Result = require('./models/Classes/Result');
-const cc = require('currency-codes');
-const apiMono = require('./controllers/api_mono.controllers');
-const apiNbu = require('./controllers/api_nbu.controllers');
-const UndefinedCurrency = require('./models/Classes/Error');
+const getApiMono = require('./controllers/api_mono.controllers');
+const getApiNbu = require('./controllers/api_nbu.controllers');
+const flag = require('./flag');
 
+let conv = async function converter(chatId, userMessageData, source) {
+    let result;
 
-
-function getSummResult(data, amount, clientCurCodeFrom, clientCurCodeTo, source) {
-    
-    const currencyFrom = cc.code(clientCurCodeFrom);
-    const currencyTo = cc.code(clientCurCodeTo);
-
-    if (currencyTo == undefined){
-        throw new UndefinedCurrency('Currency not found', clientCurCodeTo);
+    if (source === 'nbu') {
+        result = await getApiNbu();
     }
-    
-    if (currencyFrom == undefined){
-        throw new UndefinedCurrency('Currency not found', clientCurCodeFrom);
-    }
-    
-    const foundCurrencyFrom = data.find((cur) => {
-        return cur.getCode().toString() === currencyFrom.number;
+    else {
+        result = await getApiMono();
+    };
+
+    let curarray = userMessageData.split(' ');
+    let amount = curarray[0];
+    let currencyFrom = curarray[1].toUpperCase();
+    let currencyTo = curarray[2].toUpperCase();
+
+    const foundCurrencyFrom = result.find((data) => {
+        return data.letterCode === currencyFrom;
     });
-
-    const foundCurrencyTo = data.find((cur) => {
-        return cur.getCode().toString() === currencyTo.number;
+    const foundCurrencyTo = result.find((data) => {
+        return data.letterCode === currencyTo;
     });
+    // console.log({cu})
+    console.log(foundCurrencyFrom.getLetterCode())
+    console.log(foundCurrencyTo.getLetterCode())
 
-    let summ = (amount * foundCurrencyFrom.getRate() / foundCurrencyTo.getRate()).toFixed(2);
-    return new Result(summ, foundCurrencyTo.getLetterCode(), source);
-}
+    try {
+        if (!foundCurrencyFrom || !foundCurrencyTo) {
+            return bot.sendMessage(chatId, 'No currency found');
+        };
+        if (curarray.length != 4 || foundCurrencyFrom === undefined || foundCurrencyTo === undefined) {
+            return bot.sendMessage(chatId, 'Incorrect input');
+        };
 
+        if (foundCurrencyFrom && foundCurrencyTo) {
 
-module.exports = async function (amount, clientCurCodeFrom, clientCurCodeTo, source) {
+            let getValue = `${amount} ${currencyFrom} ${flag[currencyFrom]}
+⇋ 
+${(foundCurrencyFrom.getRate() / foundCurrencyTo.getRate() * amount).toFixed(3)} ${currencyTo} ${flag[currencyTo]}
+Source: ${source}`;
 
-    if (source !== 'mono' && source !== 'nbu') { 
-        throw new Error ('Invalid sourse');
-    }
-
-    let data;
-
-    if (source === 'mono' ) {
-        data = await apiMono();
-    }
-
-    else if (source === 'nbu') {
-        data = await apiNbu();
-    }
-
-    return getSummResult(data, amount, clientCurCodeFrom, clientCurCodeTo, source);
-
-
+            return getValue;
+        };
+    } catch (e) {
+        return e;
+    };
 };
+
+module.exports = conv;

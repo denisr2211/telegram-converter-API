@@ -1,45 +1,49 @@
 const cc = require('currency-codes');
-const NodeCache = require( 'node-cache' );
+const NodeCache = require('node-cache');
 const axios = require('axios').default;
 const Currency = require('../models/Classes/Currency');
-const myCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
+const myCache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
 
 let getApi = async function getCurrency() {
     let value = myCache.get('values');
     if (value) {
         console.log('cache found');
         return value;
-    }
+    };
     let data;
     console.log('cache not found');
 
-    try{
+    try {
         let response = await axios.get('https://api.monobank.ua/bank/currency');
         data = response.data;
     }
-    catch(e){
-         console.log(e);
-    
+    catch (e) {
+        console.log(e.message);
     };
 
-    let currencies = [];
-    data.forEach(element => {
-        elem = cc.number((element.currencyCodeA+'').padStart(3, '0'));
-        let rate;
-        if (elem){
-            if (element.rateBuy){
-                rate = element.rateBuy;
-            }
-            else{
-                rate = element.rateCross;
-            }
-            const c = new Currency(element.currencyCodeA, elem.code, rate);
-            currencies.push(c);
-        }
-    });
+    let currencies = [new Currency('980', 'UAH', 1)];
+    try {
+        data.forEach(element => {
+            elem = cc.number((element.currencyCodeA + '').padStart(3, '0'));
+            let rate;
+            if (elem) {
+                if (element.rateBuy) {
+                    rate = element.rateBuy;
+                }
+                else {
+                    rate = element.rateCross;
+                }
+                const c = new Currency(element.currencyCodeA, elem.code, rate);
+                currencies.push(c);
+            };
+        });
+    }
+    catch (e) {
+        console.log(e.message);
+    };
 
     myCache.set('values', currencies, 600);
-    
+
     return currencies;
 };
 
