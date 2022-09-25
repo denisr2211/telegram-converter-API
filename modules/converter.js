@@ -2,6 +2,7 @@ const Currency = require('./models/Classes/Currency');
 const getApiMono = require('./controllers/api_mono.controllers');
 const getApiNbu = require('./controllers/api_nbu.controllers');
 const flag = require('./flag');
+const bot = require('../app');
 
 let conv = async function converter(chatId, userMessageData, source) {
     let result;
@@ -19,21 +20,18 @@ let conv = async function converter(chatId, userMessageData, source) {
     let currencyTo = curarray[2].toUpperCase();
 
     const foundCurrencyFrom = result.find((data) => {
-        return data.letterCode === currencyFrom;
+            return data.letterCode === currencyFrom;
     });
     const foundCurrencyTo = result.find((data) => {
         return data.letterCode === currencyTo;
     });
-    // console.log({cu})
-    console.log(foundCurrencyFrom.getLetterCode())
-    console.log(foundCurrencyTo.getLetterCode())
 
     try {
         if (!foundCurrencyFrom || !foundCurrencyTo) {
-            return bot.sendMessage(chatId, 'No currency found');
+            return 'No currency found';
         };
         if (curarray.length != 4 || foundCurrencyFrom === undefined || foundCurrencyTo === undefined) {
-            return bot.sendMessage(chatId, 'Incorrect input');
+            return 'Incorrect input';
         };
 
         if (foundCurrencyFrom && foundCurrencyTo) {
@@ -51,3 +49,10 @@ Source: ${source}`;
 };
 
 module.exports = conv;
+
+
+
+
+// if (data.letterCode != currencyFrom) {
+//     return bot.sendMessage(chatId, 'No currency found');
+// }

@@ -2,10 +2,8 @@ const TelegramApi = require('node-telegram-bot-api');
 const Currency = require('./modules/models/Classes/Currency.js');
 const conv = require('./modules/converter')
 
-
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '5564242028:AAEQ4pR6wUhn5g_nALD6FUm0eCmYsyA32W4';
 const bot = new TelegramApi(TELEGRAM_BOT_TOKEN, { polling: true });
-
 
 const start = () => {
 
@@ -38,8 +36,6 @@ const start = () => {
         const str = msg.text;
         const result = str.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
 
-        // console.log({result})
-        
         if (result == null || result == undefined || result == NaN) {
             return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
         }
@@ -47,16 +43,14 @@ const start = () => {
 
 
     bot.onText(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/, async function (context) {
-        console.log({context})
+        
         let matches = context.text.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
         let stiker;
 
         const chatId = context.chat.id;
         const source = matches[4];
         const userMessageData = matches[0];
-        const amount = matches[1];
-
-        console.log({userMessageData})
+        // const amount = matches[1];
 
         try {
             if (source === 'nbu' || source === 'mono') {
@@ -69,8 +63,10 @@ const start = () => {
                 const res = await conv(chatId, userMessageData, source)
                 return bot.sendMessage(chatId, res);
             }
-                return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
-            
+            // else if (source != 'nbu' || source != 'mono') {
+            //     return bot.sendMessage(chatId, 'Important!\nSpecify the exchange source:\n"nbu" or "mono"');
+            // }
+            return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
         }
         catch (e) {
             console.log(e.message);
