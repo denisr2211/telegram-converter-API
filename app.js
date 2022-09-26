@@ -26,25 +26,13 @@ const start = () => {
             if (text === '/converter') {
                 return bot.sendMessage(chatId, 'Choose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
             };
-            if (result == null || result == undefined || result == NaN) {
+            if (result == null) {
                 return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
             }
         });
     } catch (e) {
         console.log(e.message);
     };
-
-    // bot.on('message', async (msg) => {
-        
-    //     const chatId = msg.from.id;
-    //     const str = msg.text;
-    //     const result = str.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
-
-    //     if (result == null || result == undefined || result == NaN) {
-    //         return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
-    //     }
-    // })
-
 
     bot.onText(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/, async function (context) {
         
@@ -54,7 +42,6 @@ const start = () => {
         const chatId = context.chat.id;
         const source = matches[4];
         const userMessageData = matches[0];
-        // const amount = matches[1];
 
         try {
             if (source === 'nbu' || source === 'mono') {
@@ -67,10 +54,6 @@ const start = () => {
                 const res = await conv(chatId, userMessageData, source)
                 return bot.sendMessage(chatId, res);
             }
-            // else if (source != 'nbu' || source != 'mono') {
-            //     return bot.sendMessage(chatId, 'Important!\nSpecify the exchange source:\n"nbu" or "mono"');
-            // }
-            return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
         }
         catch (e) {
             console.log(e.message);
