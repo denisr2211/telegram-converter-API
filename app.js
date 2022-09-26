@@ -17,6 +17,7 @@ const start = () => {
 
             const text = msg.text;
             const chatId = msg.chat.id;
+            const result = text.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
             
             if (text === '/start') {
                 await bot.sendSticker(chatId, 'https://chpic.su/_data/stickers/r/Rich_Uncle/Rich_Uncle_022.webp');
@@ -25,21 +26,24 @@ const start = () => {
             if (text === '/converter') {
                 return bot.sendMessage(chatId, 'Choose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
             };
+            if (result == null || result == undefined || result == NaN) {
+                return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
+            }
         });
     } catch (e) {
         console.log(e.message);
     };
 
-    bot.on('message', async (msg) => {
+    // bot.on('message', async (msg) => {
         
-        const chatId = msg.from.id;
-        const str = msg.text;
-        const result = str.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
+    //     const chatId = msg.from.id;
+    //     const str = msg.text;
+    //     const result = str.match(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/);
 
-        if (result == null || result == undefined || result == NaN) {
-            return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
-        }
-    })
+    //     if (result == null || result == undefined || result == NaN) {
+    //         return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
+    //     }
+    // })
 
 
     bot.onText(/^(\d+) (\w{3}) (\w{3}) (nbu|mono)?/, async function (context) {
