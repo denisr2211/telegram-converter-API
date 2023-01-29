@@ -1,4 +1,4 @@
-const Currency = require('./models/Classes/Currency');
+//const Currency = require('./models/Classes/Currency');
 const getApiMono = require('./controllers/api_mono.controllers');
 const getApiNbu = require('./controllers/api_nbu.controllers');
 const flag = require('./flag');

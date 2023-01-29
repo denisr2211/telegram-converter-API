@@ -35,6 +35,7 @@ const start = () => {
             if (result == null) {
                 return bot.sendMessage(chatId, 'I do not understand you, try again!\nChoose a resource to convert,\nenter text in the format:\n100 usd eur mono\nor\n100 usd eur nbu');
             }
+            console.log("запрос")
         });
     } catch (e) {
         console.log(e.message);
