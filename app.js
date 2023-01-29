@@ -8,7 +8,7 @@ const TelegramApi = require('node-telegram-bot-api');
 const Currency = require('./modules/models/Classes/Currency.js');
 const conv = require('./modules/converter')
 
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '5564242028:AAEQ4pR6wUhn5g_nALD6FUm0eCmYsyA32W4';
 const bot = new TelegramApi(TELEGRAM_BOT_TOKEN, { polling: true });
 
 const start = () => {
